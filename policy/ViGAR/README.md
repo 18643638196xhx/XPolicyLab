@@ -2,7 +2,7 @@
 
 **Contributor:** PKU DAGroup & AgiBot | **Paper:** Rethinking World-Action Model for Compositional and In-Context Robotic Manipulation | **arXiv:** https://arxiv.org/abs/2610.02368 | **Original code:** https://github.com/DAGroup-PKU/ViGAR
 
-ViGAR (**Vi**sual **G**oal-conditioned **A**ction **R**easoning) pairs a subgoal planner, which generates the image of the next subgoal, with a world-action policy that acts toward it. Both are initialized from Cosmos3-Nano. The planner and the policy need different Cosmos runtimes, so the adapter starts ViGAR's own model servers and reuses ViGAR's RoboTwin client code. It supports RoboTwin 2.0 dual-arm `joint` control with `arx_x5` and `aloha_agilex` (6+1 dimensions per arm). `install.sh` clones ViGAR into `source_vigar/`.
+ViGAR (**Vi**sual **G**oal-conditioned **A**ction **R**easoning) is a hierarchical framework that factorizes manipulation into a visual subgoal planner and a subgoal executor. Given the current observation and global instruction, the subgoal planner predicts a visual subgoal for the next subtask. The subgoal executor then jointly generates future visual trajectories and actions conditioned on the predicted subgoal.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboTwin 2.0 Leaderboard](https://robotwin-platform.github.io/leaderboard).
 
@@ -21,7 +21,7 @@ bash install.sh
 bash download_checkpoint.sh
 ```
 
-This downloads the policy (`weights/policy/robotwin_c2r`, with its Wan2.2 VAE and Qwen3-VL tokenizer) and the subgoal planner (`weights/subgoal_planner/robotwin_subgoal_planner`) from [DAGroup-PKU/ViGAR](https://huggingface.co/DAGroup-PKU/ViGAR) to `checkpoints/ViGAR/`, about 60 GB. Pass a directory to download elsewhere, then use that path as `ckpt_name` or set `checkpoint_path` in `deploy.yml`.
+This downloads the policy (`weights/policy/robotwin_c2r`, with its Wan2.2 VAE and Qwen3-VL tokenizer) and the subgoal planner (`weights/subgoal_planner/robotwin_subgoal_planner`) from [DAGroup-PKU/ViGAR](https://huggingface.co/DAGroup-PKU/ViGAR) to `checkpoints/ViGAR/`. Pass a directory to download elsewhere, then use that path as `ckpt_name` or set `checkpoint_path` in `deploy.yml`.
 
 ## Data Processing
 
@@ -36,7 +36,7 @@ bash process_data.sh RoboTwin ViGAR arx_x5 joint
 
 ## Training
 
-Post-trains the policy with ViGAR's recipe: 8 GPUs, global batch 256, learning rate 1e-5, 50,000 updates, a checkpoint every 4,000 updates. The recipe fixes its own training seed; `<seed>` only names the run directory. Outputs go to `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/runs/`. Run `download_checkpoint.sh` first; training takes the VAE and the tokenizer from the released policy. Subgoal planner training is described in [ViGAR's training guide](https://github.com/DAGroup-PKU/ViGAR/blob/main/docs/training.md).
+Post-trains the policy with ViGAR's recipe: 8 GPUs, global batch 256, learning rate 1e-5, 50,000 updates, a checkpoint every 4,000 updates. Outputs go to `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/runs/`. Run `download_checkpoint.sh` first; training takes the VAE and the tokenizer from the released policy. Subgoal planner training is described in [ViGAR's training guide](https://github.com/DAGroup-PKU/ViGAR/blob/main/docs/training.md).
 
 ```bash
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
@@ -57,13 +57,13 @@ bash eval.sh RoboTwin adjust_bottle ViGAR arx_x5 joint 0 0 0 uv <robotwin_env>
 
 `<policy_env>` is `uv` for the environment made by `install.sh`, a ViGAR checkout containing `.venv-model`, a Python environment directory, or a conda environment. With one id in `<policy_gpu_id>`, the planner and the policy share that GPU; with two ids, such as `0,1`, the planner runs on the first and the policy on the second. The planner and the policy take about 33 GB of GPU memory each, and a simulator about 7 GB.
 
-Model loading takes a few minutes per policy server. Server logs, including `planner.log` and `policy.log`, are written to `logs/<task_name>-<time>-<pid>/`.
+Server logs, including `planner.log` and `policy.log`, are written to `logs/<task_name>-<time>-<pid>/`.
 
 ## Reported Result
 
-| Clean | Randomized | Average |
-|---:|---:|---:|
-| 82.00 | 67.02 | **74.51** |
+| Clean | Randomized | Average | Rollouts |
+|---:|---:|---:|---:|
+| 82.00 | 67.02 | **74.51** | 50 tasks × 2 conditions × 100 episodes = 10,000 |
 
 ## Configuration
 

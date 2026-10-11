@@ -14,13 +14,16 @@
 <a href="https://robotwin-platform.github.io/leaderboard">RoboTwin Leaderboard</a>
 </p>
 
+<p>🏆 <strong>Best Tool Paper Award</strong> · IROS 2026, Pittsburgh<br/>
+Building Scalable Infrastructure for Robot Learning Workshop, awarded to all XPolicyLab contributors.</p>
+
 <img src="assets/teaser.png" alt="XPolicyLab overview" width="100%"/>
 
 <p><em>Connecting N policies to M evaluation environments — from O(N×M) down to O(N+M).</em></p>
 
 </div>
 
-XPolicyLab is the shared layer between policy code and evaluation environments. Keep each model's dependencies, checkpoints, and training recipes under `policy/<POLICY>/`; XPolicyLab handles the parts that are boring but easy to get wrong — serving, observation/action contracts, and eval wiring. As of September 2026, the ecosystem integrates **48 robot policies** spanning VLA, world-action, imitation-learning, and memory-augmented families, and the same adapters serve RoboTwin, RoboDojo simulation, and standardized real-robot evaluation.
+XPolicyLab is the shared layer between policy code and evaluation environments. Keep each model's dependencies, checkpoints, and training recipes under `policy/<POLICY>/`; XPolicyLab handles the parts that are boring but easy to get wrong — serving, observation/action contracts, and eval wiring. As of October 2026, the ecosystem integrates **63 robot policies** spanning VLA, world-action, imitation-learning, and memory-augmented families, and the same adapters serve RoboTwin, RoboDojo simulation, and standardized real-robot evaluation.
 
 Start here for repo-level concepts and integration steps. For install commands, checkpoint layout, and training details, jump to that policy's README — it is the source of truth for its model.
 
@@ -72,13 +75,13 @@ XPolicyLab is benchmark-agnostic: any benchmark, simulator, or real-robot setup 
 **Infrastructure**
 
 - **[RLinf](https://github.com/RLinf/RLinf)** *(coming soon)*: infrastructure target for policy development and deployment workflows.
-- **StarVLA**: infrastructure and policy stack; see [policy/starVLA](policy/starVLA/README.md).
+- **StarVLA**: infrastructure and policy stack; see [policy/StarVLA](policy/StarVLA/README.md).
 
 
 
 ## 🧭 Integrated Policies
 
-48 policies are currently integrated, spanning VLA, world-action, imitation-learning, and memory-augmented families, plus [demo_policy](policy/demo_policy/README.md) as the minimal reference adapter. Top-level adapters live in `policy/`; each policy README documents that model's paper/repo link, environment, data format, training entrypoint, and checkpoint layout.
+63 policies are currently integrated, spanning VLA, world-action, imitation-learning, and memory-augmented families, plus [demo_policy](policy/demo_policy/README.md) as the minimal reference adapter. Top-level adapters live in `policy/`; each policy README documents that model's paper/repo link, environment, data format, training entrypoint, and checkpoint layout.
 
 
 | Policy                                   | Policy                                               | Policy                                      | Policy                                                     | Policy                                                         | Policy                                            |
@@ -89,8 +92,11 @@ XPolicyLab is benchmark-agnostic: any benchmark, simulator, or real-robot setup 
 | [LDA-1B](policy/LDA_1B/README.md)        | [LingBot-VA](policy/LingBot_VA/README.md)            | [LingBot-VLA](policy/LingBot_VLA/README.md) | [Meituan-Robotics-0](policy/Meituan_Robotics_0/README.md)  | [Mem-0](policy/Mem_0/README.md)                                | [MolmoAct2](policy/MolmoAct2/README.md)           |
 | [OLA-SEM](policy/OLA_SEM/README.md)      | [OpenDM](policy/OpenDM/README.md)                    | [OpenVLA-OFT](policy/OpenVLA_OFT/README.md) | [OpenWAM](policy/OpenWAM/README.md)                        | [π0](policy/Pi_0/README.md)                                    | [π0.5](policy/Pi_05/README.md)                    |
 | [π0-Fast](policy/Pi_0_Fast/README.md)    | [RDT-1B](policy/RDT_1B/README.md)                    | [RISE](policy/RISE/README.md)               | [SmolVLA](policy/SmolVLA/README.md)                        | [Spatial Forcing](policy/Spatial_Forcing/README.md)            | [Spirit v1.5](policy/Spirit_v15/README.md)        |
-| [TinyVLA](policy/TinyVLA/README.md)      | [X-VLA](policy/X_VLA/README.md)                      | [X-WAM](policy/X_WAM/README.md)             | [Xiaomi-Robotics-0](policy/Xiaomi_Robotics_0/README.md)    | [Xiaomi-Robotics-1 (XR-1)](policy/Xiaomi_Robotics_1/README.md) | [StarVLA](policy/starVLA/README.md)               |
-| [ACT](policy/ACT/README.md) | [DP](policy/DP/README.md) | [Evo-1](policy/Evo_1/README.md) | [HWM-CogWAM](policy/HWM_CogWAM/README.md) | [InternW0_delta](policy/InternW0_delta/README.md) | [KinRT](policy/KinRT/README.md) |
+| [TinyVLA](policy/TinyVLA/README.md)      | [X-VLA](policy/X_VLA/README.md)                      | [X-WAM](policy/X_WAM/README.md)             | [Xiaomi-Robotics-0](policy/Xiaomi_Robotics_0/README.md)    | [Xiaomi-Robotics-1 (XR-1)](policy/Xiaomi_Robotics_1/README.md) | [StarVLA](policy/StarVLA/README.md)               |
+| [ACT](policy/ACT/README.md) | [DP](policy/DP/README.md) | [Evo-1](policy/Evo_1/README.md) | [InternW0_delta](policy/InternW0_delta/README.md) | [KinRT](policy/KinRT/README.md) | [PatchWAM-Lite](policy/PatchWAM/README.md) |
+| [Awomo-0.5](policy/Awomo05/README.md) | [MoPA](policy/MoPA/README.md) | [PhysicalRSI](policy/physicalRSI/README.md) | [Simate-beta](policy/Simate_beta/README.md) | [SimpleMemVLA](policy/SimpleMemVLA/README.md) | [WorldScape Policy 2.0](policy/WorldScape_Policy_2/README.md) |
+| [GPT-6-Astra-Direct-EEF](policy/GPT_6_Astra_Direct_EEF/README.md) | [VPP2](policy/VPP2/README.md) | [Liber_0_lite](policy/Liber_0_lite/README.md) | [Discrete Forcing](policy/Discrete_Forcing/README.md) | [EgoVLA](policy/EgoVLA/README.md) | [MM-ABC](policy/MM_ABC/README.md) |
+| [HWM-CogWAM](policy/HWM_CogWAM/README.md) | [ME-Brain-1.0](policy/ME_Brain_1/README.md) | [ME-U0](policy/ME_U0/README.md) | | | |
 | [demo_policy](policy/demo_policy/README.md) | | | | | |
 
 Adding a policy of your own, or entering a leaderboard, both go through a PR — see [Add Your Own Policy](#-add-your-own-policy).
@@ -481,6 +487,7 @@ python scripts/transform_lerobot_v21_format.py "<bench_name>.*.*" \
 - **All three camera keys always exist.** A camera missing from the source is filled with black frames, so features stay stable across robots.
 - **Images are RGB**, decoded through `decode_image_bit` and never swapped afterwards ([above](#decode-only-through-decode_image_bit)).
 - **Joint-space bimanual only.** Both read the `*_arm_joint_states` / `*_ee_joint_states` keys and fail on a trajectory that carries only pose or single-arm keys.
+- **Video is AV1 by default.** `DatasetConfig.vcodec` picks the encoder: `libsvtav1` for AV1, `h264_nvenc` for H.264.
 - The two differ beyond dataset version only in encoding throughput: v3.0 writes images from 8 worker processes and streams video at CRF 18.
 
 </details>

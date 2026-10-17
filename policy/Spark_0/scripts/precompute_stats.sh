@@ -57,7 +57,7 @@ config_stem="$(basename "${train_config}")"
 config_stem="${config_stem%.yaml}"
 ckpt_name="${CKPT_NAME:-${config_stem}}"
 seed="${SEED:-0}"
-bench_name="${BENCH_NAME:-Tianji}"
+bench_name="${BENCH_NAME:-SparkArena}"
 env_cfg_type="${ENV_CFG_TYPE:-tianji_marvin_wuji}"
 
 if [[ -f "${train_config}" ]]; then

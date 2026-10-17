@@ -55,11 +55,11 @@ elif [[ "${ckpt_name}" == */* ]]; then
     candidate_run_dirs=("${SCRIPT_DIR}/${ckpt_name}")
 else
     # Training run dirs embed the training env_cfg_type (tianji_marvin_wuji
-    # by default; older runs and the published pretrain checkpoint use the
-    # short tag "wuji"), so also glob any tag for the same
-    # <bench>-<ckpt>-*-<action>-<seed> tuple. This lets eval.sh take the
-    # short training CKPT_NAME (which scripts/finetune.sh defaults to the
-    # model config stem) directly.
+    # by default; older runs use the short tag "wuji"), so also glob any tag
+    # for the same <bench>-<ckpt>-*-<action>-<seed> tuple. This lets eval.sh
+    # take the short training CKPT_NAME (which scripts/finetune.sh defaults
+    # to the model config stem) directly. The published pretrain directory
+    # is checkpoints/pretrain_spark_0 and matches that short name.
     shopt -s nullglob
     tag_glob_dirs=(
         "${SCRIPT_DIR}/results/Checkpoints/${bench_name}-${ckpt_name}-"*"-${action_type}-${seed}"

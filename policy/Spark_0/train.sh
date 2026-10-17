@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ $# -lt 6 ]]; then
     echo "Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> <train_config> [extra_args...]"
-    echo "Example: bash train.sh Tianji my_run tianji_marvin_wuji ee 0 0,1,2,3 sft_spark_0"
+    echo "Example: bash train.sh SparkArena my_run tianji_marvin_wuji ee 0 0,1,2,3 sft_spark_0"
     echo "train_config is a YAML stem under model_configs/ or a path (also settable via SPARK_0_TRAIN_CONFIG)."
     echo "The training YAML's 'embodiment' key selects the schema under model_configs/embodiments/."
     exit 1

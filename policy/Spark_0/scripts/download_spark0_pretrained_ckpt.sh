@@ -17,9 +17,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ADAPTER_DIR="$(dirname "${SCRIPT_DIR}")"
 
 REPO_ID="${HF_REPO_ID:-TianxingChen/Spark-0}"
-# Published run-dir name; its "wuji" tag predates the tianji_marvin_wuji
-# default and is still resolved by setup_eval_policy_server.sh's tag glob.
-CHECKPOINT_NAME="${CHECKPOINT_NAME:-Tianji-pretrain_spark_0-wuji-ee-0}"
+# Hugging Face subdirectory. Eval finds checkpoints/pretrain_spark_0 when
+# ckpt_name is pretrain_spark_0.
+CHECKPOINT_NAME="${CHECKPOINT_NAME:-pretrain_spark_0}"
 CHECKPOINT_ROOT="${OUT_DIR:-${ADAPTER_DIR}/checkpoints}"
 CHECKPOINT_DIR="${CHECKPOINT_ROOT}/${CHECKPOINT_NAME}"
 

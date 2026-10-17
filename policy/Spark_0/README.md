@@ -52,9 +52,9 @@ Training reads **LeRobot v3** datasets in a Spark-specific layout, **not** the k
 ```bash
 bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [raw_task_dirs]
 
-# Example: <workspace>/data/Tianji/sft_spark_0/tianji_marvin_wuji/data/*.hdf5
-#          -> data/Tianji-sft_spark_0-tianji_marvin_wuji-ee/
-bash process_data.sh Tianji sft_spark_0 tianji_marvin_wuji ee
+# Example: <workspace>/data/SparkArena/sft_spark_0/tianji_marvin_wuji/data/*.hdf5
+#          -> data/SparkArena-sft_spark_0-tianji_marvin_wuji-ee/
+bash process_data.sh SparkArena sft_spark_0 tianji_marvin_wuji ee
 ```
 
 `process_data.sh` runs `tools/transform_lerobot_v30_format_tianji_ee.py`. It reads `<workspace>/data/<bench_name>/<task>/<env_cfg_type>/data/*.hdf5` (`XPL_DATA_ROOT` overrides the `data/` location), where `<task>` is each entry of `raw_task_dirs` (comma-separated, default `ckpt_name`), and writes the LeRobot v3 dataset to `data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/`, the path `train.sh` derives from the same four arguments. `action_type` must be `ee`. The converter requires `vision/cam_head/extrinsics` in every episode and exports tactile columns when the episodes carry them. Other sources:
@@ -104,10 +104,10 @@ bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_
 
 # Example: finetune on four GPUs
 bash scripts/precompute_stats.sh sft_spark_0
-bash train.sh Tianji sft_spark_0 tianji_marvin_wuji ee 0 0,1,2,3 sft_spark_0
+bash train.sh SparkArena sft_spark_0 tianji_marvin_wuji ee 0 0,1,2,3 sft_spark_0
 ```
 
-`scripts/finetune.sh <recipe> [gpus] [overrides...]` is a shortcut that names the run after the recipe (`checkpoints/Tianji-<recipe>-tianji_marvin_wuji-ee-<seed>/`; override with `BENCH_NAME` / `CKPT_NAME` / `ENV_CFG_TYPE` / `SEED`, batch size with `PER_DEVICE_BS`):
+`scripts/finetune.sh <recipe> [gpus] [overrides...]` is a shortcut that names the run after the recipe (`checkpoints/SparkArena-<recipe>-tianji_marvin_wuji-ee-<seed>/`; override with `BENCH_NAME` / `CKPT_NAME` / `ENV_CFG_TYPE` / `SEED`, batch size with `PER_DEVICE_BS`):
 
 ```bash
 bash scripts/finetune.sh sft_spark_0                                   # GPUs 0-7
@@ -137,7 +137,7 @@ bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <
 
 # Example: evaluate the SFT run on GPUs 0 (policy) and 1 (environment).
 # <ckpt_name> is the training CKPT_NAME; the run dir
-# checkpoints/Tianji-sft_spark_0-<env tag>-ee-0 is resolved for any env tag.
+# checkpoints/SparkArena-sft_spark_0-<env tag>-ee-0 is resolved for any env tag.
 bash eval.sh SparkArena <task_name> sft_spark_0 tianji_marvin_wuji ee 0 0 1 spark_0 <eval_env_conda_env>
 ```
 

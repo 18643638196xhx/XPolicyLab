@@ -16,7 +16,7 @@ set -euo pipefail
 #
 # Env knobs: GPUS, CKPT_NAME (default = train_config stem), SEED, BENCH_NAME,
 # ENV_CFG_TYPE (default tianji_marvin_wuji)
-# (default Tianji), PER_DEVICE_BS, SKIP_DA3_CHECK, plus everything train.sh
+# (default SparkArena), PER_DEVICE_BS, SKIP_DA3_CHECK, plus everything train.sh
 # understands (SPARK_0_DATA_ROOT, SPARK_0_CKPT_ROOT, SPARK_0_WANDB_ENTITY,
 # SPARK_0_ACCELERATE_CONFIG, multi-node SPARK_0_NUM_MACHINES/..., etc.).
 # Checkpoints: checkpoints/<BENCH_NAME>-<CKPT_NAME>-<ENV_CFG_TYPE>-ee-<seed>/
@@ -58,7 +58,7 @@ config_stem="$(basename "${train_config}")"
 config_stem="${config_stem%.yaml}"
 ckpt_name="${CKPT_NAME:-${config_stem}}"
 seed="${SEED:-0}"
-bench_name="${BENCH_NAME:-Tianji}"
+bench_name="${BENCH_NAME:-SparkArena}"
 env_cfg_type="${ENV_CFG_TYPE:-tianji_marvin_wuji}"
 
 # Resolve config early for a clear error (train.sh also checks).

@@ -1,6 +1,6 @@
 # Source provenance
 
-The model source is from [CloudRobo-WM-0](https://github.com/Liumouliu/CloudRobo-WM-0): inference commit `08a2f621df09cc4a6e4910fec3602bc422e4afa0` and post-training commit `4c3b80abbd8a3e0029bc509a9fedba45862b9c64`. `vendored_sources.json` records the included files and intentional training changes. Git history and experiment result files are excluded.
+The model source is from [CloudRobo-WM-0](https://github.com/Liumouliu/CloudRobo-WM-0): inference commit `08a2f621df09cc4a6e4910fec3602bc422e4afa0` and post-training commit `4c3b80abbd8a3e0029bc509a9fedba45862b9c64`. `vendored_sources.json` records the included files and intentional training changes.
 
 Upstream acknowledges Wan2.2, DINOv3, Depth Anything 3, Fast-WAM and flex-pi. Existing source and URDF notices are retained. These branch snapshots do not supply a LICENSE file; their redistribution terms and the separate model/dataset asset terms need to be supplied by the authors. This notice does not assign a new license to upstream code or assets.
 

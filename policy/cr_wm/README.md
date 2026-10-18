@@ -1,4 +1,4 @@
-# CR-WM
+# CloudRobo-WM
 
 **Contributor:** cloudrobo | **Paper:** Not released | **arXiv:** Not released | **Original code:** [CloudRobo-WM-0](https://github.com/Liumouliu/CloudRobo-WM-0)
 

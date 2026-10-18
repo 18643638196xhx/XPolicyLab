@@ -1,8 +1,5 @@
 # CloudRobo-WM Evaluation Results
 
-Completed 2026-10-18 native/inprocess BF16 validation, with final result and process-exit audit verified.
-
-This fullrun uses the same inference core and checkpoint as the adapter. The separate official WebSocket debug/simulator interface logs are attached to the PR; the table below is not a WebSocket fullrun claim.
 
 ## Overall Results
 
@@ -11,8 +8,6 @@ This fullrun uses the same inference core and checkpoint as the adapter. The sep
 | Clean / seen | 4445 / 5000 | **88.90%** |
 | Randomized / unseen | 3750 / 5000 | **75.00%** |
 | Equal-profile average | 8195 / 10000 | **81.95%** |
-
-Protocol: BF16/eager, Euler/SDPA, four denoising steps, 32-action replans, real observations for every executed action. Frozen historical seeds/prompts/payloads reused; same-run 479 inherited + 9521 new valid results, unique/disjoint.
 
 ## Success Rates Across 50 Tasks
 
@@ -69,5 +64,3 @@ Protocol: BF16/eager, Euler/SDPA, four denoising steps, 32-action replans, real 
 | stamp_seal | 96 | 74 | 96.00% | 74.00% |
 | turn_switch | 61 | 76 | 61.00% | 76.00% |
 | **Overall** | **4445 / 5000** | **3750 / 5000** | **88.90%** | **75.00%** |
-
-The old A result (88.90% / 75.20% / 82.05%) is historical and is not the result reported for this validation.

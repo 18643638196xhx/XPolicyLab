@@ -14,4 +14,4 @@ exec bash "$SCRIPT_DIR/runtime_python.sh" "$policy_env" "$XPL_ROOT/setup_policy_
     --config_path "$SCRIPT_DIR/deploy.yml" --overrides \
     "port=$port" "host=$host" "bench_name=$bench_name" "task_name=$task_name" \
     "ckpt_name=$ckpt_name" "env_cfg_type=$env_cfg_type" "seed=$seed" \
-    "policy_name=cr_wm" "action_type=$action_type" "gpu_id=$policy_gpu_id"
+    "policy_name=CloudRobo_WM" "action_type=$action_type" "gpu_id=$policy_gpu_id"

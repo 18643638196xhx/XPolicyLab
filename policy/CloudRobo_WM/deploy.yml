@@ -1,4 +1,4 @@
-policy_name: cr_wm
+policy_name: CloudRobo_WM
 protocol: ws
 host: localhost
 port: null

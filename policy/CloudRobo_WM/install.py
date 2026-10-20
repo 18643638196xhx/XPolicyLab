@@ -20,7 +20,7 @@ def run(*args: str, **kwargs) -> str:
 
 def install(stage: str, interpreter: str, offline: bool) -> None:
     if not (ROOT.parents[1] / "setup_policy_server.py").is_file():
-        raise RuntimeError("Copy the adapter to XPolicyLab/policy/cr_wm before running install.sh")
+        raise RuntimeError("Copy the adapter to XPolicyLab/policy/CloudRobo_WM before running install.sh")
     lock = json.loads((ROOT / "source_lock.json").read_text())
     spec = lock[stage]
     checkout = ROOT / spec["directory"]

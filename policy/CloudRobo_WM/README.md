@@ -1,6 +1,6 @@
 # CloudRobo-WM
 
-**Contributor:** cloudrobo | **Paper:** Not released | **arXiv:** Not released | **Original code:** [CloudRobo-WM-0](https://github.com/Liumouliu/CloudRobo-WM-0)
+**Contributor:** cloudrobo | **Paper:** [Technical report](https://github.com/Liumouliu/CloudRobo-WM/blob/main/Cloudrobo_WM_20261016.pdf) | **arXiv:** Not released | **Original code:** [CloudRobo-WM-0](https://github.com/Liumouliu/CloudRobo-WM-0)
 
 CR-WM targets **RoboTwin 2.0 / arx_x5 / joint**, one environment per server, using three RGB cameras and Joint14 state. Model code is included in `source_inference/` and `source_posttrain/`; they use separate environments because both provide the `crwm` package.
 
@@ -10,7 +10,7 @@ Reported RoboTwin results: [c2c and c2r](#robotwin-results).
 
 ## Installation
 
-Place this directory at `XPolicyLab/policy/cr_wm/`, inside the official RoboTwin workspace. Keep the parent workspace's `env_cfg/` and simulator installation. Inference uses Linux, Python 3.10–3.12 and a compatible BF16 runtime; retain the working inference environment when updating this adapter.
+Place this directory at `XPolicyLab/policy/CloudRobo_WM/`, inside the official RoboTwin workspace. Keep the parent workspace's `env_cfg/` and simulator installation. Inference uses Linux, Python 3.10–3.12 and a compatible BF16 runtime; retain the working inference environment when updating this adapter.
 
 ```bash
 bash install.sh <inference|posttrain> --python /path/to/framework/python --offline

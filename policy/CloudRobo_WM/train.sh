@@ -17,7 +17,7 @@ arguments explicitly. A finite smoke run may omit the separator/launcher args;
 with --stop-after-steps it defaults to --standalone --nproc-per-node=1.
 EOF
 }
-fail() { printf '[cr_wm] %s\n' "$*" >&2; exit 2; }
+fail() { printf '[CloudRobo_WM] %s\n' "$*" >&2; exit 2; }
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then usage; exit 0; fi
 if (( $# < 6 )); then usage >&2; exit 2; fi
 bench_name="$1"; ckpt_name="$2"; env_cfg_type="$3"; action_type="$4"; seed="$5"; device_ids="$6"; shift 6
@@ -120,5 +120,5 @@ if [[ -n "$stop_after_steps" ]]; then training_args+=(--stop-after-steps "$stop_
 if [[ -n "$resume" ]]; then training_args+=(--resume "$resume"); fi
 export PYTHONPATH="$POSTTRAIN_DIR/src${PYTHONPATH:+:$PYTHONPATH}"
 cd "$POSTTRAIN_DIR"
-printf '[cr_wm] Training output: %s\n' "$output_dir"
+printf '[CloudRobo_WM] Training output: %s\n' "$output_dir"
 exec "$PYTHON" -m torch.distributed.run "${torchrun_args[@]}" --module crwm.train "${training_args[@]}"

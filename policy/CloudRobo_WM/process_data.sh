@@ -13,7 +13,7 @@ This runs the upstream CPU precheck. --download-assets fetches the pinned public
 training resources and metadata first. Native media must already be available.
 EOF
 }
-fail() { printf '[cr_wm] %s\n' "$*" >&2; exit 2; }
+fail() { printf '[CloudRobo_WM] %s\n' "$*" >&2; exit 2; }
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then usage; exit 0; fi
 if (( $# < 4 )); then usage >&2; exit 2; fi
 bench_name="$1"; ckpt_name="$2"; env_cfg_type="$3"; action_type="$4"; shift 4

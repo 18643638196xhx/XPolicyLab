@@ -46,4 +46,4 @@ No weight or dataset bytes are included in the PR.
 - A separate 230K initialization is not published in the referenced RoboTwin weight repository. Training requires an explicit compatible initialization; the downloader supports a separately published HF file.
 - The upstream native export has specific camera keys and ordered clean-episode blocks. It is not interchangeable with an arbitrary output from the official XPolicyLab converters. The README documents the required layout.
 - Current official XPolicyLab evaluation and the source's older frozen-scene protocol have separate instructions. The supplied source results, 86.54% C2C and 72.42% C2R, have not been reproduced by this integration. No result/log attachments are included at this stage.
-- Vendored common model/data/training code, original licenses and per-file source hashes are retained. The adapter is separate from Phoenix_WAM's RoboDojo policies.
+- Vendored common model/data/training code, original licenses and per-file source hashes are retained. The adapter is separate from the Phoenix_MWA RoboDojo policies in PRs #165 and #186.

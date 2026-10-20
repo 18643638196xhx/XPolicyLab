@@ -1,6 +1,6 @@
 # Phoenix-MWA — RoboTwin 2.0
 
-RoboTwin-specific **train / eval / checkpoint** integration of [Phoenix-MWA](https://github.com/OpenPhoenix-Team/Phoenix-MWA/tree/post-train), pinned to source commit `16bc6e307ee71b3797e03a4f072a69340f078dab`. [Project and technical blog](https://openphoenix-team.github.io/Phoenix-pages/). This directory is independent of the Phoenix_WAM RoboDojo adapters.
+RoboTwin-specific **train / eval / checkpoint** integration of [Phoenix-MWA](https://github.com/OpenPhoenix-Team/Phoenix-MWA/tree/post-train), pinned to source commit `16bc6e307ee71b3797e03a4f072a69340f078dab`. [Project and technical blog](https://openphoenix-team.github.io/Phoenix-pages/). This directory is independent of the Phoenix_MWA RoboDojo adapters in PRs #165 and #186.
 
 Supported: `bench_name=RoboTwin`, `env_cfg_type=arx_x5`, `action_type=joint`. RoboTwin's simulator embodiment is **aloha-agilex**; `arx_x5` is its XPolicyLab action profile, as specified in the [official integration guide](https://robotwin-platform.github.io/doc/usage/xpolicylab.html). This does not declare real-robot RoboDojo support.
 

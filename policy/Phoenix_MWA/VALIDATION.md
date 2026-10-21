@@ -35,4 +35,12 @@ The inspected server GPUs were already occupied, so no training jobs were interr
 
 This package includes train/eval/checkpoint entry points, not pretraining. The dataset reader requires the documented native export rather than arbitrary XPolicyLab-converted data. The separate 230K initialization is not in the referenced RoboTwin HF repository; use an explicitly selected compatible initialization for training. The public 35K policy and all inference dependencies have download entries.
 
-The 86.54% C2C and 72.42% C2R values were supplied for the original source protocol; this adapter does not establish those results. Logs and result attachments are intentionally outside this delivery.
+The supplied source-protocol C2C/C2R results and logs are now included below; this adapter has not independently reproduced them.
+
+## Supplied simulator results (added 2026-10-21)
+
+[Evidence directory](evaluation_results/robotwin_20261018/README.md): 100 original client logs, the original structured result index and archive, a portable task index, recomputed totals and checksums. C2C is **4327/5000 (86.54%)** and C2R is **3621/5000 (72.42%)**, with 50 tasks × 100 episodes per protocol. Every log matches the supplied SHA256 and embedded text; all task statuses are complete and totals match the task records.
+
+These records establish the supplied historical source evaluation evidence, not a rerun of the current XPolicyLab adapter. Counts are sourced from `task_logs.json`; raw per-episode result files and a checkpoint-load/hash receipt are absent. Three C2C logs and ten C2R logs retain tracebacks followed by result-save markers. No error-free-run claim is made.
+
+The two XPolicyLab debug modes are still unverified: this bundle has no plain/encoded debug-client results. A 2026-10-21 attempt to access the existing GPU server at the configured SSH entry timed out, so no new GPU test was started. The earlier CPU/static validation above is unchanged.

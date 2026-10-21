@@ -138,4 +138,4 @@ The upstream reported C2C/C2R experiments used a pinned older RoboTwin snapshot,
 
 ## Validation and submission
 
-See [VALIDATION.md](VALIDATION.md) for checks actually performed and remaining hardware validation. [PR_DESCRIPTION.md](PR_DESCRIPTION.md) is a submission draft. User-provided results are 86.54% clean2clean and 72.42% clean2random; this integration has not reproduced those success rates. Raw result/log attachments are outside this delivery as requested.
+See [VALIDATION.md](VALIDATION.md) for checks actually performed and remaining hardware validation. [PR_DESCRIPTION.md](PR_DESCRIPTION.md) is a submission draft. The [source evaluation logs and task summary](evaluation_results/robotwin_20261018/README.md) are included: C2C **4327/5000 (86.54%)**, C2R **3621/5000 (72.42%)**, 50 tasks per protocol. All 100 supplied log hashes and aggregate counts were verified. These historical source-protocol results have not been reproduced by this XPolicyLab integration; plain/encoded debug validation remains pending.

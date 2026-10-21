@@ -1,0 +1,4 @@
+# Preserve supplied evidence bytes, including terminal whitespace and line endings.
+c2c/**/client.log -text -whitespace
+c2r/**/client.log -text -whitespace
+task_logs.json -text -whitespace

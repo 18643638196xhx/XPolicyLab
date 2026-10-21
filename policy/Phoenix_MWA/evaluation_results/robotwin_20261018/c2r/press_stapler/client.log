@@ -1,0 +1,74 @@
+/opt/conda/envs/RoboTwin/lib/python3.10/site-packages/sapien/_vulkan_tricks.py:21: UserWarning: Failed to find system libvulkan. Fallback to SAPIEN builtin libvulkan.
+  warn("Failed to find system libvulkan. Fallback to SAPIEN builtin libvulkan.")
+kinematics_fused_cu not found, JIT compiling...
+geom_cu binary not found, jit compiling...
+tensor_step_cu not found, jit compiling...
+lbfgs_step_cu not found, JIT compiling...
+line_search_cu not found, JIT compiling...
+missing pytorch3d
+OFFICIAL_SAPIEN_DEVICE CUDA_VISIBLE_DEVICES=0
+GPU: NVIDIA A100-SXM4-80GB
+  Supported: 1
+  Present:   0
+  cudaId:    0
+  rayTrace:  1
+  cudaMode   0
+GPU: NVIDIA A100-SXM4-80GB
+  Supported: 1
+  Present:   0
+  cudaId:    -1
+  rayTrace:  1
+  cudaMode   -1
+GPU: NVIDIA A100-SXM4-80GB
+  Supported: 1
+  Present:   0
+  cudaId:    -1
+  rayTrace:  1
+  cudaMode   -1
+GPU: NVIDIA A100-SXM4-80GB
+  Supported: 1
+  Present:   0
+  cudaId:    -1
+  rayTrace:  1
+  cudaMode   -1
+GPU: NVIDIA A100-SXM4-80GB
+  Supported: 1
+  Present:   0
+  cudaId:    -1
+  rayTrace:  1
+  cudaMode   -1
+GPU: NVIDIA A100-SXM4-80GB
+  Supported: 1
+  Present:   0
+  cudaId:    -1
+  rayTrace:  1
+  cudaMode   -1
+GPU: NVIDIA A100-SXM4-80GB
+  Supported: 1
+  Present:   0
+  cudaId:    -1
+  rayTrace:  1
+  cudaMode   -1
+GPU: NVIDIA A100-SXM4-80GB
+  Supported: 1
+  Present:   0
+  cudaId:    -1
+  rayTrace:  1
+  cudaMode   -1
+
+============= Config =============
+
+[95mMessy Table:[0m True
+[95mRandom Background:[0m True
+ - Clean Background Rate: 0.02
+[95mRandom Light:[0m True
+ - Crazy Random Light Rate: 0.02
+[95mRandom Table Height:[0m 0.03
+[95mRandom Head Camera Distance:[0m 0
+[94mHead Camera Config:[0m D435, True
+[94mWrist Camera Config:[0m D435, True
+[94mEmbodiment Config:[0m aloha-agilex
+
+==================================
+EVAL_CLIENT_SESSION client_id=g0-s0-press_stapler server_id=robot37-a100-shared-1963682 session_id=f8d327a1609c45c3a427563992692fee
+Data has been saved to /mnt/cpfs/lcy/Phoenix-robotwin-c2r-init230k-ft035k-full-a100-20261016/evaluate_results/init230k_ft035k_c2r_full5000_20261016_01/press_stapler/_result_random.txt

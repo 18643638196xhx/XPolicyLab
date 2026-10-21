@@ -1,0 +1,35 @@
+{
+  "origin": "User-supplied source-protocol evaluation evidence; not a rerun of this XPolicyLab adapter",
+  "verification_date": "2026-10-21",
+  "runs": {
+    "c2c": {
+      "tasks": 50,
+      "successes": 4327,
+      "completed": 5000,
+      "success_rate_percent": 86.54,
+      "logs_with_tracebacks": [
+        "move_pillbottle_pad",
+        "place_burger_fries",
+        "shake_bottle"
+      ]
+    },
+    "c2r": {
+      "tasks": 50,
+      "successes": 3621,
+      "completed": 5000,
+      "success_rate_percent": 72.42,
+      "logs_with_tracebacks": [
+        "move_pillbottle_pad",
+        "move_playingcard_away",
+        "open_microwave",
+        "place_burger_fries",
+        "place_can_basket",
+        "place_cans_plasticbox",
+        "place_object_stand",
+        "place_shoe",
+        "put_object_cabinet",
+        "rotate_qrcode"
+      ]
+    }
+  }
+}

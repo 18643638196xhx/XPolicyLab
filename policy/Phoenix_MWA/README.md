@@ -8,7 +8,6 @@ Supports `RoboTwin / arx_x5 / joint` (aloha-agilex). The released model uses **2
 model.py / deploy.py / deploy.yml   XPolicyLab interface
 runtime/                           model, configuration and checkpoints
 training/                          data preparation and training
-results/                           per-task success rates
 tests/                            regression tests
 ```
 
@@ -67,4 +66,4 @@ Inference preserves three RGB views, source resize/center-crop, z-score normaliz
 | ---: | ---: | ---: | ---: |
 | 86.54% | 72.42% | 79.48% | 10,000 |
 
-[50-task CSV](results/robotwin_task_results.csv), exported from the supplied result index: 4,327/5,000 C2C successes and 3,621/5,000 C2R successes. These scores use the [original frozen-scene protocol](https://github.com/OpenPhoenix-Team/Phoenix-MWA/blob/16bc6e307ee71b3797e03a4f072a69340f078dab/docs/ROBOTWIN.md). The XPolicyLab adapter separately passed 10 plain-RGB and 10 encoded-observation GPU debug episodes.
+The supplied result index reports 4,327/5,000 C2C successes and 3,621/5,000 C2R successes. These scores use the [original frozen-scene protocol](https://github.com/OpenPhoenix-Team/Phoenix-MWA/blob/16bc6e307ee71b3797e03a4f072a69340f078dab/docs/ROBOTWIN.md). The XPolicyLab adapter separately passed 10 plain-RGB and 10 encoded-observation GPU debug episodes.

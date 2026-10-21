@@ -9,4 +9,4 @@ if (( $# >= 6 )); then
   fi
 fi
 export PYTHONPATH="$P/../../..:${PYTHONPATH:-}"
-exec "${PYTHON:-python}" -m XPolicyLab.policy.Phoenix_MWA.training "$@"
+exec "${PYTHON:-python}" -m XPolicyLab.policy.Phoenix_MWA.training.train "$@"

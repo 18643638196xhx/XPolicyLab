@@ -2,7 +2,15 @@
 
 [Project](https://openphoenix-team.github.io/Phoenix-pages/) · [Original code](https://github.com/OpenPhoenix-Team/Phoenix-MWA/tree/16bc6e307ee71b3797e03a4f072a69340f078dab) · [Weights](https://huggingface.co/AnyverseDynamics/Phoenix-RoboTwin)
 
-Supports `RoboTwin / arx_x5 / joint` (aloha-agilex). The released model uses **230K-step initialization + 35K-step posttraining**. `source/` contains the model and its dependencies.
+Supports `RoboTwin / arx_x5 / joint` (aloha-agilex). The released model uses **230K-step initialization + 35K-step posttraining**. `runtime/` contains the model and its dependencies; `training/` contains data preparation and training entry points.
+
+```text
+model.py / deploy.py / deploy.yml   XPolicyLab interface
+runtime/                           model, configuration and checkpoints
+training/                          data preparation and training
+results/                           per-task success rates
+tests/                            regression tests
+```
 
 ## Installation
 
@@ -15,7 +23,7 @@ conda activate phoenix-mwa
 bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k
 ```
 
-The downloader retrieves `policy.pt`, DINO/STVAE, WanVAE, T5 and the tokenizer. Sources and checksums are in `weights_manifest.json`; add `--verify-only` to verify an existing download.
+The downloader retrieves `policy.pt`, DINO/STVAE, WanVAE, T5 and the tokenizer. Sources and checksums are in `runtime/weights_manifest.json`; add `--verify-only` to verify an existing download.
 
 ## Data Processing
 

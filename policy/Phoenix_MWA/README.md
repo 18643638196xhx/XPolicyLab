@@ -1,6 +1,6 @@
 # Phoenix-MWA — RoboTwin 2.0
 
-RoboTwin-specific **train / eval / checkpoint** integration of [Phoenix-MWA](https://github.com/OpenPhoenix-Team/Phoenix-MWA/tree/post-train), pinned to source commit `16bc6e307ee71b3797e03a4f072a69340f078dab`. [Project and technical blog](https://openphoenix-team.github.io/Phoenix-pages/). This directory is independent of the Phoenix_MWA RoboDojo adapters in PRs #165 and #186.
+RoboTwin-specific **train / eval / checkpoint** integration of [Phoenix-MWA](https://github.com/OpenPhoenix-Team/Phoenix-MWA/tree/post-train), pinned to source commit `16bc6e307ee71b3797e03a4f072a69340f078dab`. [Project and technical blog](https://openphoenix-team.github.io/Phoenix-pages/).
 
 Supported: `bench_name=RoboTwin`, `env_cfg_type=arx_x5`, `action_type=joint`. RoboTwin's simulator embodiment is **aloha-agilex**; `arx_x5` is its XPolicyLab action profile, as specified in the [official integration guide](https://robotwin-platform.github.io/doc/usage/xpolicylab.html). This does not declare real-robot RoboDojo support.
 
@@ -28,20 +28,7 @@ bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k
 bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k --verify-only
 ```
 
-The downloader uses immutable HF revisions for the policy, encoders and tokenizer; large model files are verified by SHA256 and size. It downloads only the inference dependencies:
-
-```text
-checkpoints/phoenix-robotwin-35k/
-├── policy.pt
-├── encoders/dino110k.pt
-├── encoders/stvae150k.pt
-├── DiffSynth-Studio/Wan-Series-Converted-Safetensors/
-│   ├── Wan2.2_VAE.safetensors
-│   └── models_t5_umt5-xxl-enc-bf16.safetensors
-└── Wan-AI/Wan2.1-T2V-1.3B/google/umt5-xxl/
-```
-
-Sources: [policy](https://huggingface.co/AnyverseDynamics/Phoenix-RoboTwin), [DINO/CS-VAE encoders](https://huggingface.co/AnyverseDynamics/Phoenix-Encoders), [WanVAE/T5](https://www.modelscope.cn/models/DiffSynth-Studio/Wan-Series-Converted-Safetensors), [tokenizer](https://huggingface.co/Wan-AI/Wan2.1-T2V-1.3B). See `weights_manifest.json` for exact filenames, revisions and checksums. Inference does not need a pretraining checkpoint, training data, training T5 cache, or original Wan DiT shards.
+The downloader pins revisions and verifies model files by SHA256 and size. It retrieves the policy, DINO/STVAE encoders, WanVAE, T5 and tokenizer. See [weights_manifest.json](weights_manifest.json) for sources and checksums.
 
 For training, download the original Wan DiT backbones as well:
 
@@ -59,7 +46,7 @@ The referenced RoboTwin repository currently publishes the posttrained `policy.p
 
 The upstream training reader expects its **LeRobot v2.1** RoboTwin export: 27500 episodes, 50 Hz, `robot_type=aloha`, native 14D `action` / `observation.state`, and `observation.images.cam_high`, `cam_left_wrist`, `cam_right_wrist`. It selects the first 50 episodes of each 550-episode task block: **2500 clean demonstrations across 50 tasks**. Randomized trajectories in the surrounding export are excluded by the reader.
 
-This is the prepared upstream export, **not a claim of compatibility with an arbitrary export from XPolicyLab's official converters**. Its camera names, global task-block ordering and clean selector are required. Keep the original `meta/`, `data/` and `videos/` directories. This adapter does not decode raw XPolicyLab HDF5 image bytes or change stored channel conventions. A custom dataset requires a separately reviewed reader/configuration and new statistics; do not relabel unrelated episodes to bypass these checks.
+Use the prepared upstream export with its original `meta/`, `data/` and `videos/` directories. Camera names, task-block ordering and the clean selector must match this layout; arbitrary XPolicyLab exports require conversion first.
 
 ```bash
 # Validate an existing native export and its task-indexed text cache:
@@ -113,15 +100,9 @@ bash scripts/eval_policy.sh multitask \
   --task-config demo_clean --test-num 100 --instruction-type unseen \
   --policy-conda-env phoenix-mwa --eval-env-conda-env robotwin --dry-run
 
-bash scripts/eval_policy.sh multitask \
-  --config env_cfg/eval/all_tasks.yml \
-  --policy-name Phoenix_MWA --ckpt-name phoenix-robotwin-35k \
-  --env-cfg-type arx_x5 --action-type joint \
-  --task-config demo_randomized --test-num 100 --instruction-type unseen \
-  --policy-conda-env phoenix-mwa --eval-env-conda-env robotwin --dry-run
 ```
 
-Review the GPU pool, concurrency and 50-task list in `env_cfg/eval/all_tasks.yml`, then remove `--dry-run`. The CLI options select 100 trials/task, unseen instructions and the clean/randomized task config. Simulator embodiment and randomization come from `env_cfg/task_config/<task-config>.yml`; `arx_x5` selects the action profile. See [official RoboTwin/XPolicyLab instructions](https://robotwin-platform.github.io/doc/usage/xpolicylab.html).
+Repeat with `--task-config demo_randomized` for C2R. Review the GPU pool, concurrency and 50-task list in `env_cfg/eval/all_tasks.yml`, then remove `--dry-run`. The CLI options select 100 trials/task, unseen instructions and the clean/randomized task config. Simulator embodiment and randomization come from `env_cfg/task_config/<task-config>.yml`; `arx_x5` selects the action profile. See [official RoboTwin/XPolicyLab instructions](https://robotwin-platform.github.io/doc/usage/xpolicylab.html).
 
 Debug wiring, with a GPU large enough to load the model:
 
@@ -136,6 +117,11 @@ DEBUG_OBS_ENCODED=1 EVAL_ENV_TYPE=debug bash eval.sh RoboTwin adjust_bottle phoe
 
 The upstream reported C2C/C2R experiments used a pinned older RoboTwin snapshot, local patches and frozen initial scenes. Those scores must not be described as a fresh run of today's XPolicyLab scheduler. See [ROBOTWIN_ORIGINAL.md](ROBOTWIN_ORIGINAL.md) for the retained source protocol and optional frozen snapshots. Normal official XPolicyLab evaluation does not require those frozen archives.
 
-## Validation and submission
+## Results
 
-See [VALIDATION.md](VALIDATION.md) for checks actually performed and remaining hardware validation. [PR_DESCRIPTION.md](PR_DESCRIPTION.md) is a submission draft. The [source evaluation logs and task summary](evaluation_results/robotwin_20261018/README.md) are included: C2C **4327/5000 (86.54%)**, C2R **3621/5000 (72.42%)**, 50 tasks per protocol. All 100 supplied log hashes and aggregate counts were verified. These historical source-protocol results have not been reproduced by this XPolicyLab integration; [Current-adapter debug validation](evaluation_results/debug_20261021/README.md) passed on 2026-10-21: 10 plain-RGB and 10 encoded-observation episodes, exit 0 and no traceback.
+| C2C | C2R | Average | Episodes |
+| ---: | ---: | ---: | ---: |
+| 86.54% | 72.42% | 79.48% | 10,000 |
+
+[Results and logs](results/README.md) · [50-task CSV](results/robotwin_task_results.csv).
+The table reports the original frozen-protocol evaluation. The current adapter passed 10 plain-RGB and 10 encoded-observation debug episodes on 2026-10-21.

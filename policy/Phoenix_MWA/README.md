@@ -1,121 +1,57 @@
-# Phoenix-MWA — RoboTwin 2.0
+# Phoenix-MWA · RoboTwin 2.0
 
-RoboTwin-specific **train / eval / checkpoint** integration of [Phoenix-MWA](https://github.com/OpenPhoenix-Team/Phoenix-MWA/tree/post-train), pinned to source commit `16bc6e307ee71b3797e03a4f072a69340f078dab`. [Project and technical blog](https://openphoenix-team.github.io/Phoenix-pages/).
+[Project](https://openphoenix-team.github.io/Phoenix-pages/) · [Original code](https://github.com/OpenPhoenix-Team/Phoenix-MWA/tree/16bc6e307ee71b3797e03a4f072a69340f078dab) · [Weights](https://huggingface.co/AnyverseDynamics/Phoenix-RoboTwin)
 
-Supported: `bench_name=RoboTwin`, `env_cfg_type=arx_x5`, `action_type=joint`. RoboTwin's simulator embodiment is **aloha-agilex**; `arx_x5` is its XPolicyLab action profile, as specified in the [official integration guide](https://robotwin-platform.github.io/doc/usage/xpolicylab.html). This does not declare real-robot RoboDojo support.
-
-The released [policy checkpoint](https://huggingface.co/AnyverseDynamics/Phoenix-RoboTwin) records **230000-step initialization → 35000-step posttraining**. The adapter preserves three separate RGB views, the source resize/center-crop processor, z-score normalization, canonical80 mapping, BF16, repeat9/full STVAE current conditioning, online T5, 32-action horizon/replanning and 10 denoising steps. These settings differ from the RoboDojo H5 releases.
+Supports `RoboTwin / arx_x5 / joint` (aloha-agilex). The released model uses **230K-step initialization + 35K-step posttraining**. `source/` contains the model and its dependencies.
 
 ## Installation
 
-Run from the policy directory inside a RoboTwin workspace containing `XPolicyLab/` and the external `env_cfg/`:
+Use a separate environment for the [RoboTwin simulator](https://robotwin-platform.github.io/doc/usage/install.html).
 
 ```bash
 cd XPolicyLab/policy/Phoenix_MWA
 bash install.sh phoenix-mwa
 conda activate phoenix-mwa
-```
-
-Python 3.10, PyTorch 2.7.1 and torchvision 0.22.1 are pinned by the source package. Training additionally installs Accelerate and DeepSpeed/ZeRO-1. Use a compatible NVIDIA driver/CUDA environment. The policy environment does not install SAPIEN, CuRobo or simulator assets; follow [RoboTwin installation](https://robotwin-platform.github.io/doc/usage/install.html) in a separate simulator environment.
-
-`source/` contains the upstream shared model/data/training library and only the RoboTwin-specific task configs, scripts, statistics and evaluation code. Original licenses and notices are retained. Source hashes and provenance are in `source_manifest.json`. No dataset or weight bytes are committed.
-
-## Checkpoints
-
-```bash
 bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k
-# Offline verification of a completed download:
-bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k --verify-only
 ```
 
-The downloader pins revisions and verifies model files by SHA256 and size. It retrieves the policy, DINO/STVAE encoders, WanVAE, T5 and tokenizer. See [weights_manifest.json](weights_manifest.json) for sources and checksums.
+The downloader retrieves `policy.pt`, DINO/STVAE, WanVAE, T5 and the tokenizer. Sources and checksums are in `weights_manifest.json`; add `--verify-only` to verify an existing download.
 
-For training, download the original Wan DiT backbones as well:
+## Data Processing
 
-```bash
-bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k --training-backbones
-# Optional: retrieve a separately published initialization checkpoint.
-# Replace INIT_REPO / INIT_FILE / INIT_REVISION with the release you intend to train from.
-bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k \
-  --init-repo INIT_REPO --init-file INIT_FILE --init-revision INIT_REVISION
-```
-
-The referenced RoboTwin repository currently publishes the posttrained `policy.pt`, not a separate 230K initialization file. Training accepts `--init /path/to/initialization.pt` and reports its actual step; it never silently substitutes the 35K policy for the 230K initialization. The optional download is saved as `initialization.pt` with a provenance receipt.
-
-## Data processing
-
-The upstream training reader expects its **LeRobot v2.1** RoboTwin export: 27500 episodes, 50 Hz, `robot_type=aloha`, native 14D `action` / `observation.state`, and `observation.images.cam_high`, `cam_left_wrist`, `cam_right_wrist`. It selects the first 50 episodes of each 550-episode task block: **2500 clean demonstrations across 50 tasks**. Randomized trajectories in the surrounding export are excluded by the reader.
-
-Use the prepared upstream export with its original `meta/`, `data/` and `videos/` directories. Camera names, task-block ordering and the clean selector must match this layout; arbitrary XPolicyLab exports require conversion first.
+Training uses the upstream **LeRobot v2.1** export: 50 Hz, native 14D actions/state and `cam_high`, `cam_left_wrist`, `cam_right_wrist` images. The reader selects the first 50 episodes of each 550-episode task block (2,500 clean demonstrations). This layout differs from arbitrary official-converter exports; retain the prepared export's `meta/`, `data/` and `videos/` directories.
 
 ```bash
-# Validate an existing native export and its task-indexed text cache:
 bash process_data.sh RoboTwin cotrain arx_x5 joint \
   --data /path/to/robotwin-v21 --text-cache /path/to/robotwin-text
-
-# Or build a NEW indexed T5 cache from meta/tasks.jsonl:
-bash process_data.sh RoboTwin cotrain arx_x5 joint \
-  --data /path/to/robotwin-v21 --text-cache /path/to/new-robotwin-text \
-  --build-text-cache --weights "$PWD/checkpoints/phoenix-robotwin-35k" --device cuda:0
 ```
 
-The cache builder writes `task_index_sharded_mmap_v1`, with BF16 valid tokens and prompt hashes. The training reader restores zero-padded 128×4096 features and the source all-visible attention mask. No visual feature cache is used; training encodes augmented RGB online. Existing caches are checked and never overwritten.
+To create the task-indexed T5 cache, add `--build-text-cache --weights "$PWD/checkpoints/phoenix-robotwin-35k" --device cuda:0` and use a new cache directory.
 
 ## Training
 
-The standard six positional arguments are followed by explicit resource options:
+Provide a separate initialization checkpoint; the public 35K policy is the posttrained release.
 
 ```bash
+bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k --training-backbones
 bash train.sh RoboTwin cotrain arx_x5 joint 42 0,1,2,3,4,5,6,7 \
-  --init /path/to/phoenix-initialization.pt \
-  --weights "$PWD/checkpoints/phoenix-robotwin-35k" \
+  --init /path/to/initialization.pt --weights "$PWD/checkpoints/phoenix-robotwin-35k" \
   --data /path/to/robotwin-v21 --text-cache /path/to/robotwin-text \
-  --nnodes 1 --nproc 8 --batch-size 8 --accumulation 1 --max-steps 35000
+  --nnodes 1 --nproc 8 --batch-size 8 --max-steps 35000
 ```
 
-Append `--dry-run` to validate resources, metadata, cache and Hydra configuration and print the launch command without starting training. `--init` must use the public Phoenix checkpoint schema. The source factory also requires the original Wan DiT shards downloaded by `--training-backbones` before it restores initialization weights.
+Add `--dry-run` to check resources and configuration. The original schedule uses 8 nodes × 8 GPUs (global batch 512); the example uses one node (global batch 64). Outputs go to `checkpoints/RoboTwin-cotrain-arx_x5-joint-42/`.
 
-For the upstream **8-node × 8-GPU, batch 8/GPU** topology, run on every node with `--nnodes 8 --nproc 8 --node-rank N --master-addr HOST`; global batch is 512 with accumulation 1. The single-node command above has global batch 64 and is not an exact reproduction of that schedule. LR is 5e-5 → 5e-7 with cosine decay and a 5% warmup. The wrapper defaults to a 35000-update budget; upstream's uncapped recipe uses 50 epochs. AdamW, BF16, ZeRO-1, all 28 prompt slots, online RGB augmentation and loss weights are preserved.
-
-Output: `checkpoints/RoboTwin-cotrain-arx_x5-joint-42/`. Existing run directories are refused. On successful completion, rank 0 exports the latest checkpoint as `policy.pt` and links shared frozen resources, so the same directory can be passed to eval. Shared links refer to your downloaded weight directory; include those resources when moving an exported run. This is posttraining code, not a pretraining implementation.
-
-## Evaluation through XPolicyLab
-
-From this directory:
+## Evaluation
 
 ```bash
 bash eval.sh RoboTwin adjust_bottle phoenix-robotwin-35k arx_x5 joint 0 \
   0 0 phoenix-mwa robotwin
 ```
 
-The standard arguments are benchmark, task, checkpoint, action profile, action type, seed, policy GPU, simulator GPU, policy environment and simulator environment. The policy reads already-decoded RGB arrays from the server. Each environment has its own action queue and reset state. No extra clipping or normalization is applied by the bridge.
+For all 50 tasks, use the [official multi-task evaluator](https://robotwin-platform.github.io/doc/usage/xpolicylab.html) with `--policy-name Phoenix_MWA --ckpt-name phoenix-robotwin-35k`, 100 episodes per task and unseen instructions. Select `demo_clean` for C2C or `demo_randomized` for C2R.
 
-For official multi-task evaluation, run from the **current RoboTwin repository root**:
-
-```bash
-bash scripts/eval_policy.sh multitask \
-  --config env_cfg/eval/all_tasks.yml \
-  --policy-name Phoenix_MWA --ckpt-name phoenix-robotwin-35k \
-  --env-cfg-type arx_x5 --action-type joint \
-  --task-config demo_clean --test-num 100 --instruction-type unseen \
-  --policy-conda-env phoenix-mwa --eval-env-conda-env robotwin --dry-run
-
-```
-
-Repeat with `--task-config demo_randomized` for C2R. Review the GPU pool, concurrency and 50-task list in `env_cfg/eval/all_tasks.yml`, then remove `--dry-run`. The CLI options select 100 trials/task, unseen instructions and the clean/randomized task config. Simulator embodiment and randomization come from `env_cfg/task_config/<task-config>.yml`; `arx_x5` selects the action profile. See [official RoboTwin/XPolicyLab instructions](https://robotwin-platform.github.io/doc/usage/xpolicylab.html).
-
-Debug wiring, with a GPU large enough to load the model:
-
-```bash
-EVAL_ENV_TYPE=debug bash eval.sh RoboTwin adjust_bottle phoenix-robotwin-35k arx_x5 joint 0 0 0 phoenix-mwa robotwin
-DEBUG_OBS_ENCODED=1 EVAL_ENV_TYPE=debug bash eval.sh RoboTwin adjust_bottle phoenix-robotwin-35k arx_x5 joint 0 0 0 phoenix-mwa robotwin
-```
-
-`deploy.yml` documents 32-step replanning and 10 denoising steps; the source runtime is BF16. Checkpoints resolve with the shared XPolicyLab resolver. For a trained run, pass its concatenated directory name or absolute path. `policy_file` defaults to `policy.pt`; `audit_dir` can select the directory for `MODEL_LOADED.json`.
-
-## Original frozen evaluation protocol
-
-The upstream reported C2C/C2R experiments used a pinned older RoboTwin snapshot, local patches and frozen initial scenes. Those scores must not be described as a fresh run of today's XPolicyLab scheduler. See [ROBOTWIN_ORIGINAL.md](ROBOTWIN_ORIGINAL.md) for the retained source protocol and optional frozen snapshots. Normal official XPolicyLab evaluation does not require those frozen archives.
+Inference preserves three RGB views, source resize/center-crop, z-score normalization and `repeat9_full_stvae`. Defaults in `deploy.yml`: `replan_steps: 32`, `num_inference_steps: 10`, `policy_file: policy.pt`, `device: cuda:0`, `request_timeout_s: 600`. The model runs in BF16.
 
 ## Results
 
@@ -123,5 +59,4 @@ The upstream reported C2C/C2R experiments used a pinned older RoboTwin snapshot,
 | ---: | ---: | ---: | ---: |
 | 86.54% | 72.42% | 79.48% | 10,000 |
 
-[Results and logs](results/README.md) · [50-task CSV](results/robotwin_task_results.csv).
-The table reports the original frozen-protocol evaluation. The current adapter passed 10 plain-RGB and 10 encoded-observation debug episodes on 2026-10-21.
+[50-task CSV](results/robotwin_task_results.csv), exported from the supplied result index: 4,327/5,000 C2C successes and 3,621/5,000 C2R successes. These scores use the [original frozen-scene protocol](https://github.com/OpenPhoenix-Team/Phoenix-MWA/blob/16bc6e307ee71b3797e03a4f072a69340f078dab/docs/ROBOTWIN.md). The XPolicyLab adapter separately passed 10 plain-RGB and 10 encoded-observation GPU debug episodes.

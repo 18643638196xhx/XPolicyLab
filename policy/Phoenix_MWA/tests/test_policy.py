@@ -5,8 +5,8 @@ from pathlib import Path
 from unittest.mock import patch
 import numpy as np
 import torch
-from . import model
-from .runtime import activate_source,SOURCE
+from .. import model
+from ..runtime import activate_source,SOURCE
 
 
 class FakeSession:
@@ -91,7 +91,7 @@ class SourceTests(unittest.TestCase):
         payload['joint96_metadata']['soft_prompt']['training_contract']['embodiment_id']=4
         with self.assertRaises(ValueError):validate_contract(cfg,payload,SOURCE/'assets/stats/robotwin.json')
     def test_indexed_cache_roundtrip(self):
-        from .process_data import write_shard
+        from ..process_data import write_shard
         from wam.datasets.text_embedding_cache import TaskIndexShardedTextEmbeddingCache
         prompts=['a','b'];contexts=[torch.randn(128,4096,dtype=torch.bfloat16) for _ in prompts]
         masks=[torch.arange(128)<n for n in (4,7)]
@@ -103,8 +103,8 @@ class SourceTests(unittest.TestCase):
                 c,m=bank.get(i,prompts[i]);torch.testing.assert_close(c[m],contexts[i][m],rtol=0,atol=0);self.assertFalse(c[~m].any())
             with self.assertRaises(ValueError):bank.get(0,'wrong prompt')
     def test_source_snapshot_hashes(self):
-        from .weights import sha256
-        manifest=json.loads((SOURCE.parent/'source_manifest.json').read_text())
+        from ..weights import sha256
+        manifest=json.loads((SOURCE/'source_manifest.json').read_text())
         for name,digest in manifest['sha256'].items():self.assertEqual(sha256(SOURCE/name),digest,name)
 
 if __name__=='__main__':unittest.main()

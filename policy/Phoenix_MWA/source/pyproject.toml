@@ -43,16 +43,6 @@ dependencies = [
 train = ["deepspeed>=0.18.5,<0.19", "torchcodec==0.5"]
 logging = ["wandb>=0.23.1,<1"]
 modelscope = ["modelscope>=1.34,<2"]
-robocasa-policy = ["websockets>=15,<17", "msgpack>=1,<2"]
-eval = [
-  "future>=1.0,<2",
-  "mujoco==3.3.2", "robosuite==1.4.0", "robomimic==0.2.0",
-  "bddl==1.0.1", "gym==0.25.2", "easydict==1.9",
-  "opencv-python==4.6.0.66", "Wand==0.7.2", "scikit-image==0.25.2",
-  "h5py==3.16.0", "cloudpickle==3.1.2", "PyOpenGL==3.1.10",
-  "glfw==2.10.2", "matplotlib==3.10.9", "numba==0.67.0",
-]
-
 [tool.setuptools]
 license-files = ["LICENSE", "NOTICE", "LICENSES/*"]
 

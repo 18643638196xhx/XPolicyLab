@@ -51,5 +51,16 @@
     "revision": "37ec512624d61f7aa208f7ea8140a131f93afc9a",
     "pattern": "google/umt5-xxl/*",
     "path": "Wan-AI/Wan2.1-T2V-1.3B"
+  },
+  "pretraining": {
+    "provider": "modelscope",
+    "repo_id": "ssuuuuu/phoenix-wam",
+    "revision": "master",
+    "filename": "phoenix-mwa-pretrain-joint96-step_256013.pt",
+    "path": "phoenix-mwa-pretrain-joint96-step_256013.pt",
+    "size": 12045482297,
+    "sha256": "f1a2749ff95253b098476b2b6bad9641b0ddea0183c4f366214a63d96bc29753",
+    "step": 256013,
+    "role": "pretraining"
   }
 }

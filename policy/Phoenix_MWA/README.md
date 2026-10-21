@@ -37,12 +37,14 @@ To create the task-indexed T5 cache, add `--build-text-cache --weights "$PWD/che
 
 ## Training
 
-Provide a separate initialization checkpoint; the public 35K policy is the posttrained release.
+The [Joint96 pretraining checkpoint (256013 steps)](https://www.modelscope.cn/api/v1/models/ssuuuuu/phoenix-wam/repo?Revision=master&FilePath=phoenix-mwa-pretrain-joint96-step_256013.pt) is available for training initialization. `--pretrain-only` downloads this file separately and verifies its size and SHA256; add `--verify-only` to check an existing copy. The default download command continues to retrieve the 35K evaluation policy and its dependencies.
 
 ```bash
+bash download_checkpoint.sh checkpoints/phoenix-pretrain-256013 --pretrain-only
 bash download_checkpoint.sh checkpoints/phoenix-robotwin-35k --training-backbones
 bash train.sh RoboTwin cotrain arx_x5 joint 42 0,1,2,3,4,5,6,7 \
-  --init /path/to/initialization.pt --weights "$PWD/checkpoints/phoenix-robotwin-35k" \
+  --init "$PWD/checkpoints/phoenix-pretrain-256013/phoenix-mwa-pretrain-joint96-step_256013.pt" \
+  --weights "$PWD/checkpoints/phoenix-robotwin-35k" \
   --data /path/to/robotwin-v21 --text-cache /path/to/robotwin-text \
   --nnodes 1 --nproc 8 --batch-size 8 --max-steps 35000
 ```

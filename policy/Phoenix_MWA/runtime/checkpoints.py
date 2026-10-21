@@ -47,6 +47,11 @@ def main():
     a.add_argument("root", type=Path)
     a.add_argument("--verify-only", action="store_true")
     a.add_argument(
+        "--pretrain-only",
+        action="store_true",
+        help="Download only the published Joint96 256013-step pretraining checkpoint",
+    )
+    a.add_argument(
         "--training-backbones",
         action="store_true",
         help="Also download original Wan DiT shards required by the training constructor",
@@ -59,15 +64,23 @@ def main():
     a.add_argument("--init-revision", default="main")
     args = a.parse_args()
     root = args.root.expanduser().resolve()
+    if args.pretrain_only and (args.training_backbones or args.init_repo):
+        a.error("--pretrain-only cannot be combined with --training-backbones or --init-repo")
+    entries = [manifest()["pretraining"]] if args.pretrain_only else manifest()["files"]
     if args.verify_only:
-        verify_local(root)
+        if args.pretrain_only:
+            x = entries[0]
+            p = root / x["path"]
+            if not p.is_file() or p.stat().st_size != x["size"]:
+                raise ValueError(f"Missing or incorrect pretraining checkpoint: {p}")
+            if sha256(p) != x["sha256"]:
+                raise ValueError(f"Checksum mismatch: {p}")
+        else:
+            verify_local(root)
         print("All weights verified")
         return
-    from huggingface_hub import hf_hub_download, snapshot_download
-    from modelscope.hub.file_download import model_file_download
-
     root.mkdir(parents=True, exist_ok=True)
-    for x in manifest()["files"]:
+    for x in entries:
         dest = root / x["path"]
         if dest.exists():
             if dest.stat().st_size != x["size"] or sha256(dest) != x["sha256"]:
@@ -75,10 +88,14 @@ def main():
             continue
         print("Downloading", x["repo_id"], x["filename"], flush=True)
         if x["provider"] == "hf":
+            from huggingface_hub import hf_hub_download
+
             cached = hf_hub_download(
                 repo_id=x["repo_id"], filename=x["filename"], revision=x["revision"]
             )
         else:
+            from modelscope.hub.file_download import model_file_download
+
             cached = model_file_download(
                 model_id=x["repo_id"], file_path=x["filename"], revision=x["revision"]
             )
@@ -88,6 +105,11 @@ def main():
         tmp = dest.with_suffix(dest.suffix + ".partial")
         shutil.copyfile(cached, tmp)
         os.replace(tmp, dest)
+    if args.pretrain_only:
+        print("Pretraining checkpoint verified:", root / entries[0]["path"])
+        return
+    from huggingface_hub import hf_hub_download, snapshot_download
+
     t = manifest()["tokenizer"]
     snapshot_download(
         repo_id=t["repo_id"],

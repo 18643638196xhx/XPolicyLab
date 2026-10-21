@@ -22,14 +22,14 @@ PHOENIX_ROBOTWIN_TEST_WEIGHT=/path/to/policy.pt \
   python -m unittest XPolicyLab.policy.Phoenix_MWA.test_policy -v
 ```
 
-## Not run
+## Not run at the initial 2026-10-19 review
 
 - Fresh `install.sh` environment installation.
 - GPU model loading, inference, or the XPolicyLab debug closed loop with plain and encoded RGB observations.
 - A training optimizer step or complete posttraining run; final training export is checked against the upstream manifest schema, not against a newly completed run.
 - Current official simulator evaluation, the frozen-source evaluation, or reproduction of the reported success rates.
 
-The inspected server GPUs were already occupied, so no training jobs were interrupted and no GPU validation was started. Before claiming runtime readiness, run both debug commands in the README on a free GPU, then a simulator smoke test. No debug or simulator result is represented as passed here.
+At the initial review, the inspected GPUs were occupied and no GPU validation was started. The debug and model-loading items were subsequently completed on 2026-10-21; see the new record below. A new simulator success-rate evaluation of this adapter remains outstanding.
 
 ## Submission boundaries
 
@@ -43,4 +43,10 @@ The supplied source-protocol C2C/C2R results and logs are now included below; th
 
 These records establish the supplied historical source evaluation evidence, not a rerun of the current XPolicyLab adapter. Counts are sourced from `task_logs.json`; raw per-episode result files and a checkpoint-load/hash receipt are absent. Three C2C logs and ten C2R logs retain tracebacks followed by result-save markers. No error-free-run claim is made.
 
-The two XPolicyLab debug modes are still unverified: this bundle has no plain/encoded debug-client results. A 2026-10-21 attempt to access the existing GPU server at the configured SSH entry timed out, so no new GPU test was started. The earlier CPU/static validation above is unchanged.
+The supplied source bundle itself has no XPolicyLab plain/encoded debug-client results. The first server entry timed out; both debug modes were then run successfully through the user-provided replacement entry, as recorded below. The earlier CPU/static validation above is unchanged.
+
+## Current-adapter GPU debug validation (2026-10-21)
+
+Both official `eval.sh` debug modes passed on the actual published 35K checkpoint: **10 plain-RGB episodes and 10 encoded-observation episodes**, each with exit code 0, `[MAIN] eval finished`, and no Python traceback. The tested source matches PR commit `097b176cbc11aadd403811a5b8a3112133fbbcf7`; no policy code changes were needed. [Logs, exact launcher, model-load receipts and environment details](evaluation_results/debug_20261021/README.md) are included.
+
+All five model files passed complete SHA256/size verification against the unchanged release manifest. The isolated workspace required the external simulator configuration and archived original policy/STVAE files because old deployment symlinks had become stale. These setup-only repairs and their initial failure logs are recorded in the evidence directory. Tests ran on RTX PRO 5000 72GB Blackwell with PyTorch 2.7.1+cu128 and transformers 5.12.1, using the existing `fastwam-pretrain` environment. This completes adapter debug validation, not a fresh installation or simulator success-rate rerun.

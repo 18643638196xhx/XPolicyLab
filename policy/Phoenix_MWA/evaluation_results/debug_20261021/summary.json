@@ -1,0 +1,24 @@
+{
+  "tested_commit": "097b176cbc11aadd403811a5b8a3112133fbbcf7",
+  "date": "2026-10-21",
+  "device": "NVIDIA RTX PRO 5000 72GB Blackwell GPU 0",
+  "environment": "fastwam-pretrain",
+  "torch": "2.7.1+cu128",
+  "transformers": "5.12.1",
+  "policy_code_modified": false,
+  "results": {
+    "plain": {
+      "exit_code": 0,
+      "episodes": 10,
+      "eval_finished": true,
+      "tracebacks": 0
+    },
+    "encoded": {
+      "exit_code": 0,
+      "episodes": 10,
+      "eval_finished": true,
+      "tracebacks": 0
+    }
+  },
+  "all_weight_hashes_match_manifest": true
+}

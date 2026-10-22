@@ -1,4 +1,4 @@
-policy_name: ME_U0
+policy_name: MachEmbodied-U0
 protocol: ws
 host: localhost
 port: null

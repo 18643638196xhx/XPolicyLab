@@ -1,17 +1,17 @@
-# ME-U0
+# MachEmbodied-U0
 
 **Contributor:** [anesthesia3690](https://github.com/anesthesia3690) | **Paper:** MachEmbodied-U0: Unified Understanding and Generation Model for Embodied Intelligence | **arXiv:** [2609.25627](https://arxiv.org/abs/2609.25627) | **Original code:** [MachEmbodied/ME-U0](https://github.com/MachEmbodied/ME-U0)
 
-ME-U0 jointly predicts future video and robot actions. This policy directory contains the RoboDojo `arx_x5` joint-action adapter and the matching GPU post-training entry points. The vendored `me_u0/` directory contains the model, data pipeline, Lance/Qwen/Wan components, preprocessing, and action codec.
+MachEmbodied-U0 jointly predicts future video and robot actions. This policy directory contains the RoboDojo `arx_x5` joint-action adapter and the matching GPU post-training entry points. The vendored `me_u0/` directory contains the model, data pipeline, Lance/Qwen/Wan components, preprocessing, and action codec.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 
-Place this directory at `RoboDojo/XPolicyLab/policy/ME_U0` and install the policy environment:
+Place this directory at `RoboDojo/XPolicyLab/policy/MachEmbodied-U0` and install the policy environment:
 
 ```bash
-cd /path/to/RoboDojo/XPolicyLab/policy/ME_U0
+cd /path/to/RoboDojo/XPolicyLab/policy/MachEmbodied-U0
 bash install.sh me_u0
 ```
 
@@ -77,6 +77,7 @@ The adapter reconstructs the architecture from these configuration files and str
 ## Evaluation
 
 ```bash
+cd /path/to/RoboDojo/XPolicyLab/policy/MachEmbodied-U0
 bash eval.sh RoboDojo stack_bowls /path/to/ME-U0-RoboDojo arx_x5 joint 0 0 1 me_u0 robodojo
 ```
 
@@ -98,6 +99,7 @@ independent official `eval.sh` invocation; tasks and seeds are assigned across
 all 32 GPU pairs.
 
 ```bash
+cd /path/to/RoboDojo/XPolicyLab/policy/MachEmbodied-U0
 ME_U0_POLICY_ENV=me_u0 ME_U0_SIM_ENV=robodojo \
 bash eval_distributed.sh \
   --checkpoint /path/to/ME-U0-RoboDojo \
